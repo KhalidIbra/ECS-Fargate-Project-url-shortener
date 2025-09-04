@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs_execution" {         #ECS Execution Role
-  name = "${var.name}-ecs-execution-role"
+  name = "ki-ecs-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -21,7 +21,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_ecr" {
 }
 
 resource "aws_iam_role" "ecs_task" {          #ECS Task Role
-  name = "${var.name}-ecs-task-role"
+  name = "ki-ecs-task-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -38,7 +38,7 @@ resource "aws_iam_role" "ecs_task" {          #ECS Task Role
 }
 
 resource "aws_iam_role_policy" "ecs_task_dynamodb" {
-  name = "${var.name}-ecs-dynamodb-policy"
+  name = "ki-ecs-dynamodb-policy"
   role = aws_iam_role.ecs_task.id
 
   policy = jsonencode({
@@ -58,7 +58,7 @@ resource "aws_iam_role_policy" "ecs_task_dynamodb" {
 
 
 resource "aws_iam_role" "codedeploy" {          #CodeDeploy Role
-  name = "${var.name}-codedeploy-role"
+  name = "ki-codedeploy-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -92,7 +92,7 @@ resource "aws_iam_openid_connect_provider" "github" {        #Github Actions OID
 }
 
 resource "aws_iam_role" "github_actions" {
-  name = "${var.name}-github-actions-role"
+  name = "ki-github-actions-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

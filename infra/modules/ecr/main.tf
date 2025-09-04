@@ -1,9 +1,9 @@
 resource "aws_ecr_repository" "urlapp" {
-  name                 = var.name
-  image_tag_mutability = "MUTABLE"
+  name                 = var.repo_name
+  image_tag_mutability = var.image_tag_mutability
 
   image_scanning_configuration {
-    scan_on_push = true
+    scan_on_push = var.scan_on_push
   }
 
   encryption_configuration {
@@ -21,11 +21,11 @@ resource "aws_ecr_lifecycle_policy" "parameters" {
     rules = [
       {
         rulePriority = 1
-        description  = "Keep last 10 images (any tags)"
+        description  = "Keep last X images (any tags)"
         selection = {
           tagStatus     = "any"
           countType     = "imageCountMoreThan"
-          countNumber   = 10
+          countNumber   = var.keep_last_images
         }
         action = {
           type = "expire"
@@ -33,12 +33,12 @@ resource "aws_ecr_lifecycle_policy" "parameters" {
       },
       {
         rulePriority = 2
-        description  = "Expire untagged images older than 14 days"
+        description  = "Expire untagged images older than X days"
         selection = {
           tagStatus   = "untagged"
           countType   = "sinceImagePushed"
           countUnit   = "days"
-          countNumber = 14
+          countNumber = var.untagged_expiration_days
         }
         action = {
           type = "expire"

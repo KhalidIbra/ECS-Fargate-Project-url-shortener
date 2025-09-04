@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb" {
-  name        = "${var.name}-alb-sg"
+  name        = "ki-alb-sg"
   description = "Allow inbound HTTP/HTTPS traffic to ALB"
   vpc_id      = var.vpc_id
 
@@ -26,7 +26,7 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_security_group" "ecs" {
-  name   = "${var.name}-ecs-sg"
+  name   = "ki-ecs-sg"
   vpc_id = var.vpc_id
 
   ingress {
@@ -45,7 +45,7 @@ resource "aws_security_group" "ecs" {
 }
 
 resource "aws_security_group" "endpoints" {
-  name   = "${var.name}-endpoints-sg"
+  name   = "ki-endpoints-sg"
   vpc_id = var.vpc_id
 
   ingress {
