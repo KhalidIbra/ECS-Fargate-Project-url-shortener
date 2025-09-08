@@ -1,9 +1,9 @@
 output "alb_arn" {
-  value       = aws_lb.this.arn
+  value       = aws_alb.ki_alb.arn
 }
 
 output "alb_dns_name" {
-  value       = aws_lb.this.dns_name
+  value       = aws_alb.ki_alb.dns_name
 }
 
 output "listener_arn" {

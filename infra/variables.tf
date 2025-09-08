@@ -69,11 +69,6 @@ variable "untagged_expiration_days" {
 
 #---------------------------------ALB-------------------------------
 
-variable "service_name" {
-type = string
-default = "ki-ecs-service"
-}
-
 variable "vpc_id" {
 type = string
 }

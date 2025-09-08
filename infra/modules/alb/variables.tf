@@ -13,8 +13,8 @@ variable "vpc_id" {
 type = string
 }
 
-variable "security_group_id" {
-type = string
+variable "alb_security_group" {
+type = list(string)
 }
 
 variable "private_subnet_mappings" {
@@ -29,4 +29,3 @@ default = 8080
 variable "waf_web_acl_arn" {
   type        = string
 }
-

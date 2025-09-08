@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "ki_td" {
-    family    = var.service_name-var.region
+    family    = var.service_name
     cpu       = var.task_cpu
     memory    = var.task_memory
     network_mode = "awsvpc"
@@ -28,23 +28,17 @@ resource "aws_ecs_task_definition" "ki_td" {
     environment = [
         { name = "TABLE_NAME", value = var.dynamodb_tablename}
     ]
-    log_configuration = {
-        logDriver = "awslogs"
-        options = {
-            awslogs-group = aws_cloudwatch_log_group.ki_ecs_log_group
-            awslogs-region = eu-west-2
-            awslogs-stream-prefix ="ecs"
-        }
-    }
    }])
 }
 
-
+resource "aws_ecs_cluster" "urlapp" {
+  name = "url-shortener"
+}
 
 resource "aws_ecs_service" "ki_service" {
   name            = var.service_name
-  cluster         = var.cluster_name
-  task_definition = aws_ecs_task_definition.this.arn
+  cluster         = aws_ecs_cluster.urlapp.id
+  task_definition = aws_ecs_task_definition.ki_td.arn
   desired_count   = var.desired_task_count
   launch_type = "FARGATE"
 
@@ -54,7 +48,7 @@ resource "aws_ecs_service" "ki_service" {
 
   network_configuration {
     assign_public_ip = false 
-    subnets          = [for o in var.subnet_mappings : o.id]
+    subnets          = var.subnets
     security_groups  = var.security_groups
   }
 

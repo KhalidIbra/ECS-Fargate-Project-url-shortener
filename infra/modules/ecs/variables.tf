@@ -3,12 +3,6 @@ variable "service_name" {
     default = "ki-ecs-service"
 }
 
-variable "cluster_name" {
-    type = string
-    default = "ki-ecs-cluster"
-}
-
-
 variable "container_image" {
     type = string
     default = ""
@@ -34,8 +28,8 @@ variable "desired_task_count" {
     default = 0
 }
 
-variable "subnet_mappings" {
-    type =map(any)
+variable "subnets" {
+    type =list(string)
 }
 
 variable "security_groups" {

@@ -1,7 +1,7 @@
 resource "aws_alb" "ki_alb" {  
   name            = "${var.service_name}-alb"  
   subnets         = [for o in var.private_subnet_mappings : o.id]
-  security_groups = [aws_security_group.alb.id]
+  security_groups = var.alb_security_group
   internal        = true
   load_balancer_type = "application"
 }
@@ -42,7 +42,7 @@ resource "aws_lb_target_group" "green" {
 
 
 resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.this.arn
+  load_balancer_arn = aws_alb.ki_alb.arn
   port              = 80
   protocol          = "HTTP"
 
@@ -57,7 +57,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_wafv2_web_acl_association" "this" {
-  resource_arn = aws_lb.this.arn
+  resource_arn = aws_alb.ki_alb.arn
   web_acl_arn  = var.waf_web_acl_arn
 }
 

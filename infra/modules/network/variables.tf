@@ -17,3 +17,8 @@ variable "public_subnet_cidrs" {
 variable "region" {
   type        = string
 }
+
+variable "endpoint_sg_id" {
+    type = list(string)
+  
+}

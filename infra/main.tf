@@ -7,9 +7,8 @@ module "ecs" {
   task_memory     = var.task_memory
   desired_task_count = var.desired_task_count
   dynamodb_tablename = "ki-url-mappings"
-  cluster_name    = module.ecs_cluster.cluster_name
-  subnet_mappings = module.networking.private_subnet_ids
-  security_groups = [module.security_groups.ecs_sg_id]
+  subnets = module.network.private_subnet_ids
+  security_groups = [module.securitygroups.ecs_sg_id]
   alb_target_group_arn = module.alb.blue_tg_arn
   execution_role_arn = module.iam.execution_role_arn
   task_role_arn      = module.iam.task_role_arn
@@ -28,8 +27,9 @@ module "alb" {
   source = "./modules/alb"
   vpc_id = var.vpc_id
   private_subnet_mappings = var.private_subnet_mappings
-  security_group_id = var.security_group_id
+  alb_security_group = [module.securitygroups.alb_sg_id]
   waf_web_acl_arn = var.waf_web_acl_arn
+  
   
 }
 
@@ -40,15 +40,16 @@ module "network" {
   private_subnet_cidrs =  var.private_subnet_cidrs
   public_subnet_cidrs = var.public_subnet_cidrs
   region = var.region
+  endpoint_sg_id = [module.securitygroups.endpoint_sg_id]
 }
 
 module "codedeploy" {
   source = "./modules/codedeploy"
   name = var.name
   ecs_service_name = module.ecs.service_name
-  ecs_cluster_name = module.ecs.cluster_name
+  ecs_cluster_name = module.ecs.cluster_id
   green_target_group_name = module.alb.green_tg_arn
-  listener_arn = module.alb.listener_arn
+  listener_arn = [module.alb.listener_arn]
   blue_target_group_name = module.alb.blue_tg_arn
   codedeploy_role_arn = var.codedeploy_role_arn
 }

@@ -15,7 +15,7 @@ resource "aws_ecr_repository" "urlapp" {
 
 
 resource "aws_ecr_lifecycle_policy" "parameters" {
-  repository = aws_ecr_repository.this.name
+  repository = aws_ecr_repository.urlapp.name
 
   policy = jsonencode({
     rules = [
