@@ -1,0 +1,62 @@
+name: Build + Push
+
+on:
+ push:
+   branches: ["main"]
+
+permissions:
+id-token: write
+contents: read
+
+env:
+  AWS_ACCOUNT_ID: 676206939809
+  AWS_REGION: eu-west-1
+  ECR_REPOSITORY: urlapp
+  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_URI: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+jobs: 
+   build and test: 
+      runs-on: ubuntu-latest
+      steps:
+       - uses: actions/checkout@v5
+ 
+       - name: Set up Python
+         uses: actions/setup-python@v5
+         with:
+          python-version: 3.12
+
+
+       - name: install dependencies
+         run: python -m pip install --upgrade pip
+              pip install -r requirements.txt
+
+
+       - name: Unit testing
+         run: pytest test_api.py
+
+       - name: Build image
+         run: docker build -t $IMAGE_URI
+
+       - name: Scan image with Trivy
+         uses: aquasecurity/trivy-action@master
+         with: 
+           image-ref: ${{ env.IMAGE_URI }}
+           severity: HIGH,CRITICAL
+           ignore-unfixed: true 
+
+       - name: Configure OIDC
+         uses: aws-actions/configure-aws-credentials@v4
+         with: 
+            role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-oidc-role
+            aws-region: ${{ env.AWS_REGION }}
+
+       - name: Login to ECR 
+         uses: aws-actions/amazon-ecr-login@v2
+ 
+       - name: Push image
+         run: docker push $IMAGE_URI
+          
+
+
+
