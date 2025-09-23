@@ -84,7 +84,7 @@ resource "aws_iam_role_policy_attachment" "codedeploy_policy" {
 
 
 
-resource "aws_iam_openid_connect_provider" "github" {        #Github Actions OIDC Role
+resource "aws_iam_openid_connect_provider" "github" {        
   url = "https://token.actions.githubusercontent.com"
 
   client_id_list   = ["sts.amazonaws.com"]

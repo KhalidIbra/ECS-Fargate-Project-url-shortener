@@ -18,7 +18,7 @@ type = list(string)
 }
 
 variable "private_subnet_mappings" {
-type = map(any)
+type = list(string)
 }
 
 variable "app_port" {

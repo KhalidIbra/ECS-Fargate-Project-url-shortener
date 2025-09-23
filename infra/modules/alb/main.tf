@@ -1,6 +1,6 @@
 resource "aws_alb" "ki_alb" {  
   name            = "${var.service_name}-alb"  
-  subnets         = [for o in var.private_subnet_mappings : o.id]
+  subnets         = var.private_subnet_mappings
   security_groups = var.alb_security_group
   internal        = true
   load_balancer_type = "application"
