@@ -8,42 +8,39 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
 permissions:
-id-token: write
-contents: read
-
-env: 
-  AWS_ACCOUNT_ID: 676206939809
-  AWS_REGION: eu-west-1
-  ECR_REPOSITORY: urlapp
-  IMAGE_TAG: ${{ github.sha }}
-  IMAGE_URI: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
-
-
+  id-token: write
+  contents: read
 
 jobs:
-  build:
   deploy:
-    needs: build and push 
-
-  steps:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      IMAGE_TAG: ${{ github.sha }}
+      IMAGE_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+    steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-oidc-role
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-oidc-role
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init -backend-config="bucket=ki-terraform-state" -backend-config="region=$AWS_REGION"
+        run: terraform init -backend-config="bucket=ki-terraform-state" -backend-config="region=${{ secrets.AWS_REGION }}
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-
