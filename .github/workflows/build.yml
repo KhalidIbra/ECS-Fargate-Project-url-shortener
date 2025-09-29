@@ -38,7 +38,7 @@ jobs:
           pip install -r app/requirements.txt
 
       - name: Unit testing
-        run: python -m pytest app/tests/test_api.py
+        run: python -m pytest 
 
       - name: Build image
         run: docker build -t $IMAGE_URI .
