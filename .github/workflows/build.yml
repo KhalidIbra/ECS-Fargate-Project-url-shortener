@@ -38,7 +38,7 @@ jobs:
           pip install --no-cache-dir -r app/requirements.txt
 
       - name: Build image
-        run: docker build -t $IMAGE_URI .
+        run: docker build -t $IMAGE_URI -f app/Dockerfile app
 
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@master
