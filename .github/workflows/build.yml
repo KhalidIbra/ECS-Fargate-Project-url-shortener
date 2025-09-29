@@ -38,7 +38,9 @@ jobs:
           pip install --no-cache-dir -r app/requirements.txt
 
       - name: Unit testing
-        run: python -m pytest 
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          python -m pytest 
 
       - name: Build image
         run: docker build -t $IMAGE_URI .
