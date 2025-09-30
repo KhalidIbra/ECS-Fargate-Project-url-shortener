@@ -33,10 +33,13 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
+        working-directory: infra
         run: terraform init -backend-config="bucket=ki-terraform-state" -backend-config="region=$AWS_REGION"
 
       - name: Terraform Plan
+        working-directory: infra
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
+        working-directory: infra
         run: terraform apply -auto-approve tfplan
