@@ -7,9 +7,12 @@ output "task_role_arn" {
 }
 
 output "codedeploy_role_arn" {
-  value = aws_iam_role.codedeploy.arn
+  value = aws_iam_role.codedeploy_role.arn
 }
 
 output "github_actions_role_arn" {
   value = aws_iam_role.github_actions.arn
+}
+output "dynamodb_table_arn" {
+  value = aws_dynamodb_table.tf_lock.arn
 }
