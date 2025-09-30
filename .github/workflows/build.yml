@@ -5,6 +5,7 @@ on:
     workflows: ["Infra Deployment"]
     types:
       - completed
+  workflow_dispatch:
 
 permissions:
   id-token: write
