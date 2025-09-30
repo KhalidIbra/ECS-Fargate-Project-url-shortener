@@ -1,10 +1,10 @@
-name: Deploy
+name: Infra Deployment
 
 on:
-  workflow_run:
-    workflows: ["Build + Push"]
-    types:
-      - completed
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
   id-token: write
@@ -27,7 +27,7 @@ jobs:
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-oidc-role
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-user
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set up Terraform
