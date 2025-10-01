@@ -114,10 +114,6 @@ variable "name" {
     type = string 
 }
 
-variable "codedeploy_role_arn" { 
-    type = string 
-}
-
 #---------------------------------IAM--------------------------------------
 
 variable "dynamodb_table_arn" {

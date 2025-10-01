@@ -57,7 +57,7 @@ module "codedeploy" {
 module "iam" {
   source = "./modules/iam"
   github_repo = var.github_repo
-  dynamodb_table_arn = module.iam.dynamodb_table_arn
+  dynamodb_table_arn = module.ecs.dynamodb_table_arn
 }
 
 module "securitygroups" {

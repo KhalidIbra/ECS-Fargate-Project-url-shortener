@@ -22,3 +22,13 @@ output "task_definition_arn" {
   description = "ARN of the task definition"
   value       = aws_ecs_task_definition.ki_td.arn
 }
+
+output "dynamodb_table_arn" {
+  description = "ARN of the DynamoDB table for URL storage"
+  value       = aws_dynamodb_table.url_storage.arn
+}
+
+output "dynamodb_table_name" {
+  description = "Name of the DynamoDB table for URL storage"
+  value       = aws_dynamodb_table.url_storage.name
+}
