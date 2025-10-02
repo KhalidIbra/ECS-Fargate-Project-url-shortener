@@ -116,10 +116,6 @@ variable "name" {
 
 #---------------------------------IAM--------------------------------------
 
-variable "dynamodb_table_arn" {
-  type        = string
-}
-
 variable "github_repo" {
   type        = string
 }
