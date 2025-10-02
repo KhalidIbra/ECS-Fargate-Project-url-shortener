@@ -1,3 +1,6 @@
+data "aws_caller_identity" "current" {}
+
+
 resource "aws_iam_role" "ecs_execution" {         #ECS Execution Role
   name = "ki-ecs-execution-role"
 
