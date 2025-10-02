@@ -68,18 +68,11 @@ variable "untagged_expiration_days" {
 
 #---------------------------------ALB-------------------------------
 
-variable "vpc_id" {
-type = string
-}
-
 variable "app_port" {
 type = number
 default = 8080
 }
 
-variable "waf_web_acl_arn" {
-  type        = string
-}
 
 #----------------------------------Networking-----------------------------
 
