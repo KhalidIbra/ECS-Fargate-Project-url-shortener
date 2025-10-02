@@ -81,7 +81,7 @@ resource "aws_iam_role" "codedeploy" {          #CodeDeploy Role
 
 resource "aws_iam_role_policy_attachment" "codedeploy_policy" {
   role       = aws_iam_role.codedeploy.name
-  policy_arn = aws_iam_policy.codedeploy.arn
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRoleForECS" 
 }
 
 
@@ -94,7 +94,7 @@ resource "aws_iam_role" "github_actions" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = aws_iam_openid_connect_provider.github.arn
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
