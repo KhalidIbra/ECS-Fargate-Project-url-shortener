@@ -20,7 +20,7 @@ resource "aws_ecr_lifecycle_policy" "parameters" {
   policy = jsonencode({
     rules = [
       {
-        rulePriority = 1
+        rulePriority = 2
         description  = "Keep last X images (any tags)"
         selection = {
           tagStatus     = "any"
@@ -32,7 +32,7 @@ resource "aws_ecr_lifecycle_policy" "parameters" {
         }
       },
       {
-        rulePriority = 2
+        rulePriority = 1
         description  = "Expire untagged images older than X days"
         selection = {
           tagStatus   = "untagged"
