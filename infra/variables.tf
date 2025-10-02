@@ -77,10 +77,6 @@ variable "security_group_id" {
 type = string
 }
 
-variable "private_subnet_mappings" {
-type = map(any)
-}
-
 variable "app_port" {
 type = number
 default = 8080
