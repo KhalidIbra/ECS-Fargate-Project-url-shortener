@@ -1,7 +1,6 @@
 module "ecs" {
   source = "./modules/ecs"
   service_name   = var.service_name
-  container_image = var.container_image
   container_port  = var.container_port
   task_cpu        = var.task_cpu
   task_memory     = var.task_memory

@@ -6,7 +6,6 @@ variable "service_name" {
   default = "ki-url-service"
 }
 
-
 variable "container_image" {
   type        = string
 }
@@ -70,10 +69,6 @@ variable "untagged_expiration_days" {
 #---------------------------------ALB-------------------------------
 
 variable "vpc_id" {
-type = string
-}
-
-variable "security_group_id" {
 type = string
 }
 
