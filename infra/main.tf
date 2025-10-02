@@ -47,7 +47,7 @@ module "codedeploy" {
   source = "./modules/codedeploy"
   name = var.name
   ecs_service_name = module.ecs.service_name
-  ecs_cluster_name = module.ecs.cluster_id
+  ecs_cluster_name = module.ecs.cluster_name
   green_target_group_name = module.alb.green_tg_arn
   listener_arn = [module.alb.listener_arn]
   blue_target_group_name = module.alb.blue_tg_arn

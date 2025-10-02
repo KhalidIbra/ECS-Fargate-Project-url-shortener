@@ -81,23 +81,8 @@ resource "aws_iam_role" "codedeploy" {          #CodeDeploy Role
 
 resource "aws_iam_role_policy_attachment" "codedeploy_policy" {
   role       = aws_iam_role.codedeploy.name
-  policy_arn = "arn:aws:iam::aws:policy/ki-codedeploy-role"
+  policy_arn = aws_iam_policy.codedeploy.arn
 }
-
-
-
-resource "aws_iam_openid_connect_provider" "github" {        
-  url = "https://token.actions.githubusercontent.com"
-
-  client_id_list   = ["sts.amazonaws.com"]
-  thumbprint_list  = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
-
-  lifecycle {
-  prevent_destroy = true
-  }
-}
-
-
 
 
 resource "aws_iam_role" "github_actions" {
