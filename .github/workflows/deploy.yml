@@ -49,34 +49,40 @@ jobs:
       - name: Terraform Apply
         working-directory: infra
         run: terraform apply -auto-approve tfplan
-
-      - name: Create AppSpec JSON
-  run: |
-    cat > appspec.json <<EOF
-{
-  "version": "0.0",
-  "Resources": [
-    {
-      "TargetService": {
-        "Type": "AWS::ECS::Service",
-        "Properties": {
-          "TaskDefinition": "$IMAGE_URI",
-          "LoadBalancerInfo": {
-            "ContainerName": "$ECS_SERVICE_NAME",
-            "ContainerPort": 8080
+      
+      - name: Create AppSpec file
+        run: |
+          echo '{
+            "version": "0.0",
+            "Resources": [
+              {
+                "TargetService": {
+                  "Type": "AWS::ECS::Service",
+                  "Properties": {
+                    "TaskDefinition": "$IMAGE_URI",
+                    "LoadBalancerInfo": {
+                      "ContainerName": "url-shortener",
+                      "ContainerPort": 8080
+                    }
+                  }
+                }
+              }
+            ]
           }
-        }
-      }
-    }
-  ]
-}
-EOF
+          EOF   
 
-- name: Trigger CodeDeploy ECS deployment
-  run: |
-    aws deploy create-deployment \
-      --application-name "$CODEDEPLOY_APP_NAME" \
-      --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
-      --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
-      --description "Deployment triggered by GitHub Actions" \
-      --revision revisionType=AppSpecContent,appSpecContent=file://appspec.json
+      - name: Trigger CodeDeploy ECS Deployment
+        run: aws deploy create-deployment \
+             --application-name "$CODEDEPLOY_APP_NAME" \
+             --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
+             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
+             --description "Deployment triggered by GitHub Actions" \
+             --revision revisionType=AppSpecContent,appSpecContent=file://appspec.json
+
+      - name: Wait for Deployment Completion
+        run: aws deploy wait deployment-successful \
+             --deployment-id $(aws deploy list-deployments \
+             --application-name "$CODEDEPLOY_APP_NAME" \
+             --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
+             --include-only-statuses Created,Queued,InProgress \
+             --query "deployments[-1]" --output text)
