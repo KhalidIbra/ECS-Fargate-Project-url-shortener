@@ -84,6 +84,9 @@ jobs:
 
 
       - name: Trigger CodeDeploy ECS Deployment
+        env:
+         CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
+         CODEDEPLOY_DEPLOYMENT_GROUP: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
         run: aws deploy create-deployment \
              --application-name "${CODEDEPLOY_APP_NAME:-url-shortener-app}" \  
              --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
