@@ -30,6 +30,3 @@ resource "aws_acm_certificate_validation" "check" {
   validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
 }
 
-output "certificate_arn" {
-  value = aws_acm_certificate.check.arn
-}
