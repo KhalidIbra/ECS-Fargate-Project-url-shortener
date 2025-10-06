@@ -20,10 +20,8 @@ jobs:
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
       IMAGE_TAG: ${{ github.sha }}
       IMAGE_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
-      ECS_CLUSTER_NAME: ki-url-cluster   
-      ECS_SERVICE_NAME: ki-url-service   
-      CODEDEPLOY_APP_NAME: ki-ecs
-      CODEDEPLOY_DEPLOYMENT_GROUP: ki-ecs-group
+      CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
+      CODEDEPLOY_DEPLOYMENT_GROUP: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
 
     steps:
       - name: Checkout repo
