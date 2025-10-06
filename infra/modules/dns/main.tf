@@ -1,9 +1,10 @@
-resource "aws_route53_zone" "this" {
-  name = var.domain_name
+data "aws_route53_zone" "primary" {
+  zone_id = var.zone_id
 }
 
+
 resource "aws_route53_record" "app" {
-  zone_id = aws_route53_zone.this.zone_id
+  zone_id = data.aws_route53_zone.primary.zone_id
   name    = var.domain_name
   type    = "A"
 
