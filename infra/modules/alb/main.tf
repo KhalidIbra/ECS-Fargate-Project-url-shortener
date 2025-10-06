@@ -52,9 +52,24 @@ resource "aws_lb_listener" "http" {
   }
 
   lifecycle {
-    ignore_changes = [default_action] #Prevents Terraform from rewriting changes made by CodeDeploy
+    ignore_changes = [default_action] 
   }
 }
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = var.acm_certificate_arn
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.blue.arn
+  }
+}
+
+
 
 resource "aws_wafv2_web_acl_association" "this" {
   resource_arn = aws_alb.ki_alb.arn

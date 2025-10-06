@@ -104,3 +104,11 @@ variable "github_repo" {
   type        = string
 }
 
+#---------------------------------acm--------------------------------------
+variable "domain_name" {
+  type        = string
+}
+variable "subject_alternative_names" {
+  type        = list(string)
+  default     = []
+}

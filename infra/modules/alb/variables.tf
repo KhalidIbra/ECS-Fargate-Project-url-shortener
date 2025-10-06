@@ -29,3 +29,8 @@ default = 8080
 variable "waf_web_acl_arn" {
   type        = string
 }
+
+variable "acm_certificate_arn" {
+  type        = string
+  
+}

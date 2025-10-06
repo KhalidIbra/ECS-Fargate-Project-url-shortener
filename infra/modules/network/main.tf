@@ -28,6 +28,7 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_endpoint_type   = "Gateway"
   service_name = "com.amazonaws.${var.region}.s3"
   route_table_ids = [aws_route_table.private.id]
+  depends_on         = [aws_route_table.private]
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
@@ -35,6 +36,7 @@ resource "aws_vpc_endpoint" "dynamodb" {
   vpc_endpoint_type   = "Gateway"
   service_name = "com.amazonaws.${var.region}.dynamodb"
   route_table_ids = [aws_route_table.private.id]
+  depends_on         = [aws_route_table.private]
 }
 
 locals {

@@ -29,7 +29,7 @@ module "alb" {
   private_subnet_mappings = module.network.private_subnet_ids
   alb_security_group = [module.securitygroups.alb_sg_id]
   waf_web_acl_arn = module.waf.waf_acl_arn
-  
+  acm_certificate_arn = module.acm.certificate_arn
   
 }
 
@@ -68,5 +68,19 @@ module "securitygroups" {
 module "waf" {
   source = "./modules/waf"
   alb_arn = module.alb.alb_arn
+}
+
+module "acm" {
+  source = "./modules/acm"
+  zone_id = module.dns.zone_id
+  domain_name = var.domain_name
+  subject_alternative_names = var.subject_alternative_names
+}
+
+module "dns" {
+  source = "./modules/dns"
+  domain_name = var.domain_name
+  alb_dns_name = module.alb.alb_dns_name
+  alb_zone_id = module.alb.alb_zone_id
 }
 
