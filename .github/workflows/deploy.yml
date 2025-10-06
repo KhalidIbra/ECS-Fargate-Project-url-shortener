@@ -76,6 +76,13 @@ jobs:
            echo "CODEDEPLOY_DEPLOYMENT_GROUP=$CODEDEPLOY_DEPLOYMENT_GROUP"
            echo "IMAGE_URI=$IMAGE_URI"
 
+      - name: Print CodeDeploy variables
+        run: |
+           echo "App Name: '$CODEDEPLOY_APP_NAME'"
+           echo "Deployment Group: '$CODEDEPLOY_DEPLOYMENT_GROUP'"
+
+
+
       - name: Trigger CodeDeploy ECS Deployment
         run: aws deploy create-deployment \
              --application-name "$CODEDEPLOY_APP_NAME" \
