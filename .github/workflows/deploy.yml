@@ -68,7 +68,7 @@ jobs:
                 }
               ]
             }
-          EOF
+            EOF
 
       - name: Debug environment variables
         run: |
