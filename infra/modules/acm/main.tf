@@ -26,7 +26,7 @@ allow_overwrite = true
 }
 
 resource "aws_acm_certificate_validation" "check" {
-  certificate_arn         = aws_acm_certificate.check.arn
+  certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
 }
 
