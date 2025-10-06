@@ -68,6 +68,12 @@ jobs:
             ]
           }
           ' > appspec.json 
+          
+      - name: Debug environment variables
+        run: |
+           echo "CODEDEPLOY_APP_NAME=$CODEDEPLOY_APP_NAME"
+           echo "CODEDEPLOY_DEPLOYMENT_GROUP=$CODEDEPLOY_DEPLOYMENT_GROUP"
+           echo "IMAGE_URI=$IMAGE_URI"
 
       - name: Trigger CodeDeploy ECS Deployment
         run: aws deploy create-deployment \
