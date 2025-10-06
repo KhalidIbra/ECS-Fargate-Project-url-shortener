@@ -50,24 +50,25 @@ jobs:
       
       - name: Create AppSpec file
         run: |
-          echo {
-            "version": "0.0",
-            "Resources": [
-              {
-                "TargetService": {
-                  "Type": "AWS::ECS::Service",
-                  "Properties": {
-                    "TaskDefinition": "$IMAGE_URI",
-                    "LoadBalancerInfo": {
-                      "ContainerName": "url-shortener",
-                      "ContainerPort": 8080
+          cat > appspec.json << EOF
+            {
+              "version": "0.0",
+              "Resources": [
+                {
+                  "TargetService": {
+                    "Type": "AWS::ECS::Service",
+                    "Properties": {
+                      "TaskDefinition": "$IMAGE_URI",
+                      "LoadBalancerInfo": {
+                        "ContainerName": "url-shortener",
+                        "ContainerPort": 80
+                      }
                     }
                   }
                 }
-              }
-            ]
-          }
-          EOF 
+              ]
+            }
+          EOF
 
       - name: Debug environment variables
         run: |
