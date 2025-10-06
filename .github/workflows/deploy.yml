@@ -85,7 +85,7 @@ jobs:
 
       - name: Trigger CodeDeploy ECS Deployment
         run: aws deploy create-deployment \
-             --application-name "$CODEDEPLOY_APP_NAME" \
+             --application-name "${CODEDEPLOY_APP_NAME:-url-shortener-app}" \  
              --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
              --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
              --description "Deployment triggered by GitHub Actions" \
@@ -94,7 +94,7 @@ jobs:
       - name: Wait for Deployment Completion
         run: aws deploy wait deployment-successful \
              --deployment-id $(aws deploy list-deployments \
-             --application-name "$CODEDEPLOY_APP_NAME" \
+             --application-name "${CODEDEPLOY_APP_NAME:-url-shortener-app}" \
              --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
              --include-only-statuses Created,Queued,InProgress \
              --query "deployments[-1]" --output text)
