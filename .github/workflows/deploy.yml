@@ -50,12 +50,33 @@ jobs:
         working-directory: infra
         run: terraform apply -auto-approve tfplan
 
-      - name: Deploy to ECS via CodeDeploy
-        run: |
-          aws deploy create-deployment \
-            --application-name $CODEDEPLOY_APP_NAME \
-            --deployment-group-name $CODEDEPLOY_DEPLOYMENT_GROUP \
-            --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
-            --description "Deployment triggered by GitHub Actions" \
-            --revision revisionType=AppSpecContent,appSpecContent="{\"version\":\"0.0\",\"Resources\":[{\"TargetService\":{\"Type\":\"AWS::ECS::Service\",\"Properties\":{\"TaskDefinition\": \"${IMAGE_URI}\", \"LoadBalancerInfo\": {\"ContainerName\": \"${ECS_SERVICE_NAME}\", \"ContainerPort\": 8080}}}}]}"
-        
+      - name: Create AppSpec JSON
+  run: |
+    cat > appspec.json <<EOF
+{
+  "version": "0.0",
+  "Resources": [
+    {
+      "TargetService": {
+        "Type": "AWS::ECS::Service",
+        "Properties": {
+          "TaskDefinition": "$IMAGE_URI",
+          "LoadBalancerInfo": {
+            "ContainerName": "$ECS_SERVICE_NAME",
+            "ContainerPort": 8080
+          }
+        }
+      }
+    }
+  ]
+}
+EOF
+
+- name: Trigger CodeDeploy ECS deployment
+  run: |
+    aws deploy create-deployment \
+      --application-name "$CODEDEPLOY_APP_NAME" \
+      --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
+      --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
+      --description "Deployment triggered by GitHub Actions" \
+      --revision revisionType=AppSpecContent,appSpecContent=file://appspec.json
