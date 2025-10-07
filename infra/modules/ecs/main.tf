@@ -57,7 +57,14 @@ resource "aws_ecs_service" "ki_service" {
     container_port = var.container_port
     target_group_arn = var.alb_target_group_arn
   }
+
+  lifecycle {
+    ignore_changes = [
+      task_definition
+    ]
+  }
 }
+
 
 resource "aws_dynamodb_table" "url_storage" {
   name         = var.dynamodb_tablename
