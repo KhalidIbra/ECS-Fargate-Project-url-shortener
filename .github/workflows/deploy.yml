@@ -48,6 +48,45 @@ jobs:
       - name: Terraform Apply
         working-directory: infra
         run: terraform apply -auto-approve tfplan
+
+      - name: Register ECS Task Definition
+        run: |
+          cat > taskdef.json << EOF
+          {
+            "family": "ki-url-service",
+            "networkMode": "awsvpc",
+            "containerDefinitions": [
+              {
+                "name": "ki-url-service",
+                "image": "${IMAGE_URI}",
+                "cpu": 256,
+                "memory": 512,
+                "essential": true,
+                "portMappings": [
+                  { "containerPort": 8080, "hostPort": 8080 }
+                ],
+                "environment": [
+                  { "name": "TABLE_NAME", "value": "ki-url-mappings" }
+                ]
+              }
+            ],
+            "requiresCompatibilities": ["FARGATE"],
+            "cpu": "256",
+            "memory": "512",
+            "executionRoleArn": "${ECS_EXECUTION_ROLE_ARN}",
+            "taskRoleArn": "${ECS_TASK_ROLE_ARN}"
+          }
+          EOF
+
+          aws ecs register-task-definition \
+            --cli-input-json file://taskdef.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text > taskdef_arn.txt
+
+      - name: Set Task Definition ARN
+        run: echo "TASK_DEF_ARN=$(cat taskdef_arn.txt)" >> $GITHUB_ENV    
+
+
       
       - name: Create AppSpec file
         run: |
@@ -83,17 +122,13 @@ jobs:
            echo "Deployment Group: '$CODEDEPLOY_DEPLOYMENT_GROUP'"
 
 
-
       - name: Trigger CodeDeploy ECS Deployment
-        env:
-         CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
-         CODEDEPLOY_DEPLOYMENT_GROUP: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
         run: aws deploy create-deployment \
              --application-name "${CODEDEPLOY_APP_NAME}" \  
              --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
              --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
              --description "Deployment triggered by GitHub Actions" \
-             --revision "revisionType=AppSpecContent,appSpecContent={\"content\":\"$(cat appspec.json | jq -Rs .)\"}"
+             --revision "revisionType=AppSpecContent,appSpecContent=file://appspec.json"
 
       - name: Wait for Deployment Completion
         run: aws deploy wait deployment-successful \
