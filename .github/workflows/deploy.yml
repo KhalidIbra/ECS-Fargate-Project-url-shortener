@@ -23,6 +23,8 @@ jobs:
       CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
       CODEDEPLOY_DEPLOYMENT_GROUP: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
       TASK_DEF_ARN: ${{ secrets.TASK_DEF_ARN }}
+      ECS_EXECUTION_ROLE_ARN: ${{ secrets.ECS_EXECUTION_ROLE_ARN }}
+      ECS_TASK_ROLE_ARN: ${{ secrets.ECS_TASK_ROLE_ARN }}
 
     steps:
       - name: Checkout repo
