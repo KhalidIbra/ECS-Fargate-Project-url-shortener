@@ -98,6 +98,16 @@ variable "name" {
     type = string 
 }
 
+variable "blue_target_group_name" {
+  type = string
+  default = "ki-blue-tg"
+}
+
+variable "green_target_group_name" {
+  type = string
+  default = "ki-green-tg"
+}
+
 #---------------------------------IAM--------------------------------------
 
 variable "github_repo" {
