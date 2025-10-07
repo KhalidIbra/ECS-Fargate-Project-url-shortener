@@ -91,6 +91,9 @@ resource "aws_iam_role_policy" "codedeploy_role_permissions" {
       {
         Effect = "Allow"
         Action = [
+          "ecs:CreateTaskSet",
+          "ecs:UpdateServicePrimaryTaskSet",
+          "ecs:DeleteTaskSet",
           "ecs:DescribeServices",
           "ecs:DescribeTaskDefinition",
           "ecs:DescribeTasks",
