@@ -1,0 +1,46 @@
+name: Destroy Infrastructure
+
+on:
+  workflow_dispatch:    
+
+permissions:
+  id-token: write       
+  contents: read
+
+jobs:
+  destroy:
+    name: Terraform Destroy
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-user
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: infra
+        run: |
+          terraform init \
+            -backend-config="bucket=ki-terraform-state" \
+            -backend-config="region=$AWS_REGION"
+
+      - name: Terraform Destroy (Auto-Approve)
+        working-directory: infra
+        run: terraform destroy -auto-approve
+
+      - name: Cleanup Confirmation
+        run: |
+          echo "All infrastructure destroyed successfully!"
+       
