@@ -125,17 +125,26 @@ jobs:
 
 
       - name: Trigger CodeDeploy ECS Deployment
-        run: aws deploy create-deployment \
-             --application-name "${CODEDEPLOY_APP_NAME}" \  
-             --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
-             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
-             --description "Deployment triggered by GitHub Actions" \
-             --revision "revisionType=AppSpecContent,appSpecContent=file://appspec.json"
+        env:
+          CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
+          CODEDEPLOY_DEPLOYMENT_GROUP: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
+        run: |
+          echo "Starting CodeDeploy deployment..."
+          echo "Using Application: ${CODEDEPLOY_APP_NAME}"
+          echo "Deployment Group: ${CODEDEPLOY_DEPLOYMENT_GROUP}"
 
-      - name: Wait for Deployment Completion
-        run: aws deploy wait deployment-successful \
-             --deployment-id $(aws deploy list-deployments \
-             --application-name "${CODEDEPLOY_APP_NAME}" \
-             --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
-             --include-only-statuses Created,Queued,InProgress \
-             --query "deployments[-1]" --output text)
+          DEPLOYMENT_ID=$(aws deploy create-deployment \
+            --application-name "${CODEDEPLOY_APP_NAME}" \
+            --deployment-group-name "${CODEDEPLOY_DEPLOYMENT_GROUP}" \
+            --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
+            --description "Deployment triggered by GitHub Actions" \
+            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"$(jq -Rs . < appspec.json)\"}}" \
+            --query "deploymentId" --output text)
+
+          echo "Deployment ID: ${DEPLOYMENT_ID}"
+          echo "Waiting for deployment to complete..."
+
+          aws deploy wait deployment-successful --deployment-id "${DEPLOYMENT_ID}"
+
+          echo "Deployment succeeded!"
+
