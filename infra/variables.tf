@@ -100,12 +100,12 @@ variable "name" {
 
 variable "blue_target_group_name" {
   type = string
-  default = "ki-blue-tg"
+  default = "ki-ecs-service-blue-tg"
 }
 
 variable "green_target_group_name" {
   type = string
-  default = "ki-green-tg"
+  default = "ki-ecs-service-green-tg"
 }
 
 #---------------------------------IAM--------------------------------------
