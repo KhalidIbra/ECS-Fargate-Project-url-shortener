@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "ki_td" {
 
    container_definitions = jsonencode([{
     name     = var.service_name
-    image    = var.container_image
+    image    = "placeholder"  # to be replaced in the pipeline
 
     cpu      = var.task_cpu
     memory   = var.task_memory
