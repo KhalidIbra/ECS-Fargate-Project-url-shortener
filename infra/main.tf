@@ -26,7 +26,7 @@ module "ecr" {
 module "alb" {
   source = "./modules/alb"
   vpc_id = module.network.vpc_id
-  private_subnet_mappings = module.network.private_subnet_ids
+  public_subnet_mappings = module.network.public_subnet_ids
   alb_security_group = [module.securitygroups.alb_sg_id]
   waf_web_acl_arn = module.waf.waf_acl_arn
   acm_certificate_arn = module.acm.certificate_arn

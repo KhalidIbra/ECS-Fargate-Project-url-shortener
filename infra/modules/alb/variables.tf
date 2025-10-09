@@ -17,7 +17,7 @@ variable "alb_security_group" {
 type = list(string)
 }
 
-variable "private_subnet_mappings" {
+variable "public_subnet_mappings" {
 type = list(string)
 }
 
