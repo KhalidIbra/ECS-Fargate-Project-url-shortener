@@ -1,10 +1,10 @@
 name: Infra Deployment
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_run:
+    workflows: ["Build + Push"]
+    types:
+      - completed
   workflow_dispatch:
 
 permissions:
@@ -13,13 +13,14 @@ permissions:
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-      IMAGE_TAG: ${{ github.sha }}
-      IMAGE_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+      IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
+      IMAGE_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.event.workflow_run.head_sha }}
       CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
       CODEDEPLOY_DEPLOYMENT_GROUP: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
       TASK_DEF_ARN: ${{ secrets.TASK_DEF_ARN }}
@@ -137,7 +138,7 @@ jobs:
             --application-name "${CODEDEPLOY_APP_NAME}" \
             --deployment-group-name "${CODEDEPLOY_DEPLOYMENT_GROUP}" \
             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
-            --description "Deployment triggered by GitHub Actions" \
+            --description "Deployment for commit ${IMAGE_TAG}" \
             --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":$(jq -Rs . < appspec.json)}} " \
             --query "deploymentId" --output text)
 
