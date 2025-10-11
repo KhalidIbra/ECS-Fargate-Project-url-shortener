@@ -52,3 +52,8 @@ variable "dynamodb_tablename" {
     type = string 
 }
 
+variable "container_image" {
+    type = string
+    default = ""
+  
+}
