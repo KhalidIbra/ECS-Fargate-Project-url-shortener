@@ -2,8 +2,6 @@
 azs = ["eu-west-1a", "eu-west-1b"]
 
 
-container_image = "676206939809.dkr.ecr.eu-west-1.amazonaws.com/url-app-repo:latest"
-
 dynamodb_tablename  = "url-shortener"
 
 
