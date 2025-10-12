@@ -23,7 +23,7 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
       IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
-      IMAGE_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.event.workflow_run.head_sha }}
+      IMAGE_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.event.workflow_run.head_sha || github.sha }}
       CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
       CODEDEPLOY_DEPLOYMENT_GROUP: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
       TASK_DEF_ARN: ${{ secrets.TASK_DEF_ARN }}
