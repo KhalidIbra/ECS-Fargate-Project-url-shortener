@@ -71,11 +71,6 @@ resource "aws_ecs_service" "ki_service" {
     target_group_arn = var.alb_target_group_arn
   }
 
-  lifecycle {
-    ignore_changes = [
-      task_definition
-    ]
-  }
 }
 
 resource "aws_cloudwatch_log_group" "ecs" {
