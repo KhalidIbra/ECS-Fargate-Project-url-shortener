@@ -23,13 +23,10 @@ resource "aws_ecs_task_definition" "ki_td" {
        containerPort = var.container_port
        hostPort     =  var.container_port
        protocol     = "tcp" 
-    }]
 
-    environment = [
-        { name = "TABLE_NAME", value = var.dynamodb_tablename}
-    ]
 
-    logConfiguration = {
+
+     logConfiguration = {
         logDriver = "awslogs"
         options = {
             "awslogs-group"         = "/ecs/${var.service_name}"
@@ -37,6 +34,13 @@ resource "aws_ecs_task_definition" "ki_td" {
             "awslogs-stream-prefix" = "ecs"
         }
     }
+    }]
+
+    environment = [
+        { name = "TABLE_NAME", value = var.dynamodb_tablename}
+    ]
+
+   
    }])
 }
 
