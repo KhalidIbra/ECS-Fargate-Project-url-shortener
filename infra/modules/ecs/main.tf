@@ -74,6 +74,10 @@ resource "aws_ecs_service" "ki_service" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "ecs" {
+  name              = "/ecs/${var.service_name}"
+  retention_in_days = 14
+}
 
 resource "aws_dynamodb_table" "url_storage" {
   name         = var.dynamodb_tablename
