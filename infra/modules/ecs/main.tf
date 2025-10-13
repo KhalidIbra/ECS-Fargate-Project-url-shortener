@@ -28,6 +28,15 @@ resource "aws_ecs_task_definition" "ki_td" {
     environment = [
         { name = "TABLE_NAME", value = var.dynamodb_tablename}
     ]
+
+    logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+            "awslogs-group"         = "/ecs/${var.service_name}"
+            "awslogs-region"        = "var.region"
+            "awslogs-stream-prefix" = "ecs"
+        }
+    }
    }])
 }
 
