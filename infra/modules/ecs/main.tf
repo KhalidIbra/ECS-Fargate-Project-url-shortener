@@ -26,13 +26,13 @@ resource "aws_ecs_task_definition" "ki_td" {
 
 
 
-     logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-            "awslogs-group"         = "/ecs/${var.service_name}"
-            "awslogs-region"        = "var.region"
-            "awslogs-stream-prefix" = "ecs"
-        }
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+          "awslogs-group"         = "/ecs/${var.service_name}"
+          "awslogs-region"        = "eu-west-1"
+          "awslogs-stream-prefix" = "ecs"
+       }
     }
     }]
 
