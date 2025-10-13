@@ -55,9 +55,9 @@ resource "aws_ecs_service" "ki_service" {
   desired_count   = var.desired_task_count
   launch_type = "FARGATE"
 
- # deployment_controller {
-   # type = "CODE_DEPLOY"
-  
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
 
   network_configuration {
     assign_public_ip = false 
@@ -71,7 +71,11 @@ resource "aws_ecs_service" "ki_service" {
     target_group_arn = var.alb_target_group_arn
   }
 
-  
+  lifecycle {
+    ignore_changes = [
+      task_definition
+    ]
+  }
 }
 
 resource "aws_cloudwatch_log_group" "ecs" {
