@@ -74,6 +74,12 @@ jobs:
                 "environment": [
                   { "name": "TABLE_NAME", "value": "ki-url-mappings" }
                 ]
+                "logConfiguration": {
+                  "logDriver": "awslogs",
+                  "options": {
+                    "awslogs-group": "/ecs/ki-url-service",
+                    "awslogs-region": "${AWS_REGION}",
+                    "awslogs-stream-prefix": "ecs"
               }
             ],
             "requiresCompatibilities": ["FARGATE"],
