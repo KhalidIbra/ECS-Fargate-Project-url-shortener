@@ -80,6 +80,7 @@ jobs:
                     "awslogs-group": "/ecs/ki-url-service",
                     "awslogs-region": "${AWS_REGION}",
                     "awslogs-stream-prefix": "ecs"
+                  }
               }
             ],
             "requiresCompatibilities": ["FARGATE"],
