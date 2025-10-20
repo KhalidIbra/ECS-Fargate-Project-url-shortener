@@ -73,7 +73,9 @@ resource "aws_ecs_service" "ki_service" {
 
   lifecycle {
     ignore_changes = [
-      task_definition
+      task_definition,
+      load_balancer,      
+      desired_count,
     ]
   }
 }
