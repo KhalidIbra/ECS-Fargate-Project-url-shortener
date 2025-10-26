@@ -5,6 +5,59 @@ from ddb import put_mapping, get_mapping
 
 app = FastAPI()
 
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>URL Shortener</title>
+        <style>
+            body { font-family: sans-serif; padding: 2rem; text-align: center; background: #f9fafb; }
+            input, button { padding: 0.6rem; margin: 0.5rem; width: 300px; font-size: 1rem; }
+            button { cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 6px; }
+            button:hover { background: #1d4ed8; }
+            #result { margin-top: 1rem; font-weight: bold; color: #111827; }
+        </style>
+    </head>
+    <body>
+        <h1>URL Shortener</h1>
+        <input type="url" id="urlInput" placeholder="Enter URL to shorten" />
+        <button onclick="shortenUrl()">Shorten</button>
+        <div id="result"></div>
+
+        <script>
+            async function shortenUrl() {
+                const url = document.getElementById('urlInput').value;
+                const resultDiv = document.getElementById('result');
+                resultDiv.textContent = "Processing...";
+                try {
+                    const response = await fetch("/shorten", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ url })
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        const shortUrl = `${window.location.origin}/${data.short}`;
+                        resultDiv.innerHTML = `Short URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+                    } else {
+                        resultDiv.textContent = data.detail || "Error shortening URL";
+                    }
+                } catch (err) {
+                    resultDiv.textContent = "Failed to contact server.";
+                }
+            }
+        </script>
+    </body>
+    </html>
+    """
+
+
+
+
 @app.get("/healthz")
 def health():
     return {"status": "ok", "ts": int(time.time())}
