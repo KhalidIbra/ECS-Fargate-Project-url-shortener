@@ -41,7 +41,7 @@ def home():
                     });
                     const data = await response.json();
                     if (response.ok) {
-                        const shortUrl = `${window.location.origin}/${data.short}`;
+                        const shortUrl = `https://ki-urlshortener.co.uk/${data.short}`;
                         resultDiv.innerHTML = `Short URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
                     } else {
                         resultDiv.textContent = data.detail || "Error shortening URL";
