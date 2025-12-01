@@ -6,7 +6,8 @@ A URL shortener application containerised and deployed onto AWS ECS Fargate usin
 
 # Architectural Diagram
 
-<img width="570" height="605" alt="Screenshot 2025-11-03 at 13 09 36" src="https://github.com/user-attachments/assets/bbf024fe-4b13-4e9b-9bc2-aa6fc51c3398" />
+<img width="580" height="598" alt="Screenshot 2025-11-19 at 15 20 22" src="https://github.com/user-attachments/assets/3708fbda-f8ba-4661-a52d-657473b458fd" />
+
 
 # Project Structure
 
